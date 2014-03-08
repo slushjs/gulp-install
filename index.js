@@ -25,6 +25,9 @@ module.exports = function install () {
       cb();
     },
     function (cb) {
+      if (!toRun.length) {
+        return cb();
+      }
       if (skipInstall()) {
         gutil.log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
         return cb();
