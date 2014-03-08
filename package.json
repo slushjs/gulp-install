@@ -1,0 +1,33 @@
+{
+  "name": "gulp-install",
+  "version": "0.1.0",
+  "description": "Automatically install npm and bower packages if package.json or bower.json is found in the gulp file stream respectively",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/klei/gulp-install"
+  },
+  "keywords": [
+    "gulpplugin",
+    "bower",
+    "npm",
+    "install"
+  ],
+  "author": "Joakim Bengtson <joakim@klei.se>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klei/gulp-install/issues"
+  },
+  "homepage": "https://github.com/klei/gulp-install",
+  "dependencies": {
+    "through2": "~0.4.1",
+    "gulp-util": "~2.2.14"
+  },
+  "devDependencies": {
+    "chai": "~1.9.0",
+    "mocha": "~1.17.1"
+  }
+}
