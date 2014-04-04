@@ -50,10 +50,17 @@ module.exports = function install () {
 
 
 function runCommand (command, cb) {
-  var cmd = childProcess.spawn(command.cmd, command.args, {stdio: 'inherit', cwd: process.cwd()});
-  cmd.on('close', function () {
-    cb();
-  });
+  require('which')(command.cmd, function(error, path){ 
+    if (error) {
+      gutil.log('can\'t install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
+      cb();
+      return;
+    }
+    var cmd = childProcess.spawn(path, command.args, {stdio: 'inherit', cwd: process.cwd()});
+    cmd.on('close', function () {
+      cb();
+    });
+  })
 }
 
 function formatCommands (cmds) {
