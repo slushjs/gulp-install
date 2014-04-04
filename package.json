@@ -24,7 +24,8 @@
   "homepage": "https://github.com/klei/gulp-install",
   "dependencies": {
     "through2": "~0.4.1",
-    "gulp-util": "~2.2.14"
+    "gulp-util": "~2.2.14",
+    "which": "~1.0.5"
   },
   "devDependencies": {
     "chai": "~1.9.0",
