@@ -4,7 +4,7 @@
   "description": "Automatically install npm and bower packages if package.json or bower.json is found in the gulp file stream respectively",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "NODE_ENV=test mocha -R spec"
   },
   "repository": {
     "type": "git",

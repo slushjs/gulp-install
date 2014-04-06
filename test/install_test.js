@@ -5,24 +5,9 @@ var chai = require('chai'),
     util = require('util'),
     gutil = require('gulp-util'),
     path = require('path'),
-    child_process = require('child_process'),
+    commandRunner = require('../lib/test_commandRunner'),
     install = require('../.'),
-    spawns = [],
     args = process.argv.slice();
-
-function SpawnMock () {
-  setTimeout(function () {
-    this.emit('close');
-  }.bind(this), 5);
-}
-var EventEmitter = require('events').EventEmitter;
-util.inherits(SpawnMock, EventEmitter);
-
-child_process.spawn = function () {
-  var mock = new SpawnMock();
-  spawns.push({args: Array.prototype.slice.call(arguments), mock: mock});
-  return mock;
-};
 
 function fixture (file) {
   var filepath = path.join(__dirname, file);
@@ -36,7 +21,7 @@ function fixture (file) {
 
 describe('gulp-install', function () {
   beforeEach(function () {
-    spawns = [];
+    commandRunner.reset();
     process.argv = args;
   });
 
@@ -54,9 +39,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      spawns.length.should.equal(1);
-      spawns[0].args[0].should.match(/[\/\\]npm$/);
-      spawns[0].args[1].should.eql(['install']);
+      commandRunner.commandsThatHasRun.length.should.equal(1);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
       done();
     });
 
@@ -79,9 +64,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      spawns.length.should.equal(1);
-      spawns[0].args[0].should.match(/[\/\\]bower$/);
-      spawns[0].args[1].should.eql(['install']);
+      commandRunner.commandsThatHasRun.length.should.equal(1);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('bower');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
       done();
     });
 
@@ -107,11 +92,11 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      spawns.length.should.equal(2);
-      spawns[0].args[0].should.match(/[\/\\]npm$/);
-      spawns[0].args[1].should.eql(['install']);
-      spawns[1].args[0].should.match(/[\/\\]bower$/);
-      spawns[1].args[1].should.eql(['install']);
+      commandRunner.commandsThatHasRun.length.should.equal(2);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
+      commandRunner.commandsThatHasRun[1].cmd.should.equal('bower');
+      commandRunner.commandsThatHasRun[1].args.should.eql(['install']);
       done();
     });
 
@@ -143,7 +128,7 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      spawns.length.should.equal(0);
+      commandRunner.commandsThatHasRun.length.should.equal(0);
       done();
     });
 

@@ -3,14 +3,16 @@ var through2 = require('through2'),
     gutil = require('gulp-util'),
     path = require('path'),
     childProcess = require('child_process'),
+    commandRunner = require('./lib/' + (isTest() ? 'test_' : '') + 'commandRunner'),
     cmdMap = {
       'bower.json': {cmd: 'bower', args: ['install']},
       'package.json': {cmd: 'npm', args: ['install']}
     };
 
-module.exports = function install () {
+module.exports = exports = function install () {
   var toRun = [],
       count = 0;
+
   return through2(
     {objectMode: true},
     function (file, enc, cb) {
@@ -33,7 +35,10 @@ module.exports = function install () {
         return cb();
       } else {
         toRun.forEach(function (command) {
-          runCommand(command, function () {
+          commandRunner.run(command, function (err) {
+            if (err) {
+              gutil.log(err.message, 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
+            }
             done(cb, toRun.length);
           });
         });
@@ -48,21 +53,6 @@ module.exports = function install () {
   }
 };
 
-
-function runCommand (command, cb) {
-  require('which')(command.cmd, function(error, path){
-    if (error) {
-      gutil.log('can\'t install.', 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
-      cb();
-      return;
-    }
-    var cmd = childProcess.spawn(path, command.args, {stdio: 'inherit', cwd: process.cwd()});
-    cmd.on('close', function () {
-      cb();
-    });
-  })
-}
-
 function formatCommands (cmds) {
   return cmds.map(formatCommand).join(' && ');
 }
@@ -73,4 +63,8 @@ function formatCommand (command) {
 
 function skipInstall () {
   return process.argv.slice(2).indexOf('--skip-install') >= 0;
+}
+
+function isTest () {
+  return process.env.NODE_ENV === 'test';
 }
