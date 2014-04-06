@@ -50,9 +50,9 @@ module.exports = function install () {
 
 
 function runCommand (command, cb) {
-  require('which')(command.cmd, function(error, path){ 
+  require('which')(command.cmd, function(error, path){
     if (error) {
-      gutil.log('can\'t install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
+      gutil.log('can\'t install.', 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
       cb();
       return;
     }
@@ -64,9 +64,11 @@ function runCommand (command, cb) {
 }
 
 function formatCommands (cmds) {
-  return cmds.map(function (command) {
-    return command.cmd + ' ' + command.args.join(' ');
-  }).join(' && ');
+  return cmds.map(formatCommand).join(' && ');
+}
+
+function formatCommand (command) {
+  return command.cmd + ' ' + command.args.join(' ');
 }
 
 function skipInstall () {

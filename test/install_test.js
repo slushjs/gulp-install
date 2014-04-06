@@ -55,7 +55,7 @@ describe('gulp-install', function () {
 
     stream.on('end', function () {
       spawns.length.should.equal(1);
-      spawns[0].args[0].should.equal('npm');
+      spawns[0].args[0].should.match(/[\/\\]npm$/);
       spawns[0].args[1].should.eql(['install']);
       done();
     });
@@ -80,7 +80,7 @@ describe('gulp-install', function () {
 
     stream.on('end', function () {
       spawns.length.should.equal(1);
-      spawns[0].args[0].should.equal('bower');
+      spawns[0].args[0].should.match(/[\/\\]bower$/);
       spawns[0].args[1].should.eql(['install']);
       done();
     });
@@ -108,9 +108,9 @@ describe('gulp-install', function () {
 
     stream.on('end', function () {
       spawns.length.should.equal(2);
-      spawns[0].args[0].should.equal('npm');
+      spawns[0].args[0].should.match(/[\/\\]npm$/);
       spawns[0].args[1].should.eql(['install']);
-      spawns[1].args[0].should.equal('bower');
+      spawns[1].args[0].should.match(/[\/\\]bower$/);
       spawns[1].args[1].should.eql(['install']);
       done();
     });
