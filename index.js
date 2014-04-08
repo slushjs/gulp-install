@@ -9,7 +9,7 @@ var through2 = require('through2'),
       'package.json': {cmd: 'npm', args: ['install']}
     };
 
-module.exports = exports = function install () {
+module.exports = exports = function install (cwd) {
   var toRun = [],
       count = 0;
 
@@ -21,6 +21,7 @@ module.exports = exports = function install () {
       }
       var cmd = cmdMap[path.basename(file.path)];
       if (cmd) {
+        cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
       this.push(file);
