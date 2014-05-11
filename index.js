@@ -21,6 +21,7 @@ module.exports = exports = function install () {
       }
       var cmd = cmdMap[path.basename(file.path)];
       if (cmd) {
+        cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
       this.push(file);
