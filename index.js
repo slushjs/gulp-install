@@ -4,7 +4,7 @@ var through2 = require('through2'),
     path = require('path'),
     commandRunner = require('./lib/' + (isTest() ? 'test_' : '') + 'commandRunner'),
     cmdMap = {
-      'bower.json': {cmd: 'bower', args: ['install']},
+      'bower.json': {cmd: 'bower', args: ['install', '--config.interactive=false']},
       'package.json': {cmd: 'npm', args: ['install']}
     };
 

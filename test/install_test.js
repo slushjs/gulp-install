@@ -50,7 +50,7 @@ describe('gulp-install', function () {
     stream.end();
   });
 
-  it('should run `bower install` if stream contains `bower.json`', function (done) {
+  it('should run `bower install --config.interactive=false` if stream contains `bower.json`', function (done) {
     var file = fixture('bower.json');
 
     var stream = install();
@@ -66,7 +66,7 @@ describe('gulp-install', function () {
     stream.on('end', function () {
       commandRunner.commandsThatHasRun.length.should.equal(1);
       commandRunner.commandsThatHasRun[0].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--config.interactive=false']);
       done();
     });
 
@@ -75,7 +75,7 @@ describe('gulp-install', function () {
     stream.end();
   });
 
-  it('should run both `npm install` and `bower install` if stream contains both `package.json` and `bower.json`', function (done) {
+  it('should run both `npm install` and `bower install --config.interactive=false` if stream contains both `package.json` and `bower.json`', function (done) {
     var files = [
       fixture('package.json'),
       fixture('bower.json')
@@ -96,7 +96,7 @@ describe('gulp-install', function () {
       commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
       commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
       commandRunner.commandsThatHasRun[1].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[1].args.should.eql(['install']);
+      commandRunner.commandsThatHasRun[1].args.should.eql(['install', '--config.interactive=false']);
       done();
     });
 
