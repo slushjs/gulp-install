@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/klei/gulp-install"
+    "url": "git://github.com/slushjs/gulp-install"
   },
   "keywords": [
     "gulpplugin",
@@ -19,9 +19,9 @@
   "author": "Joakim Bengtson <joakim@klei.se>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/klei/gulp-install/issues"
+    "url": "https://github.com/slushjs/gulp-install/issues"
   },
-  "homepage": "https://github.com/klei/gulp-install",
+  "homepage": "https://github.com/slushjs/gulp-install",
   "dependencies": {
     "through2": "^0.4.1",
     "gulp-util": "^2.2.14",

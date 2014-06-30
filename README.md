@@ -56,8 +56,8 @@ To not trigger the install use `--skip-install` as CLI parameter when running `s
 [npm-url]: https://npmjs.org/package/gulp-install
 [npm-image]: https://badge.fury.io/js/gulp-install.png
 
-[travis-url]: http://travis-ci.org/klei/gulp-install
-[travis-image]: https://secure.travis-ci.org/klei/gulp-install.png?branch=master
+[travis-url]: http://travis-ci.org/slushjs/gulp-install
+[travis-image]: https://secure.travis-ci.org/slushjs/gulp-install.png?branch=master
 
-[depstat-url]: https://david-dm.org/klei/gulp-install
-[depstat-image]: https://david-dm.org/klei/gulp-install.png
+[depstat-url]: https://david-dm.org/slushjs/gulp-install
+[depstat-image]: https://david-dm.org/slushjs/gulp-install.png
