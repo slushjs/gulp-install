@@ -138,4 +138,38 @@ describe('gulp-install', function () {
 
     stream.end();
   });
+
+  it('should set `cwd` correctly to be able to run the same command in multiple folders', function (done) {
+    var files = [
+      fixture('dir1/package.json'),
+      fixture('dir2/package.json')
+    ];
+
+    var stream = install();
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.commandsThatHasRun.length.should.equal(2);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
+      commandRunner.commandsThatHasRun[0].cwd.should.equal(path.join(__dirname, 'dir1'));
+      commandRunner.commandsThatHasRun[1].cmd.should.equal('npm');
+      commandRunner.commandsThatHasRun[1].args.should.eql(['install']);
+      commandRunner.commandsThatHasRun[1].cwd.should.equal(path.join(__dirname, 'dir2'));
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
+  });
 });
