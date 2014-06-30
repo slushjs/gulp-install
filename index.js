@@ -32,13 +32,13 @@ module.exports = exports = function install () {
         return cb();
       }
       if (skipInstall()) {
-        gutil.log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
+        log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
         return cb();
       } else {
         toRun.forEach(function (command) {
           commandRunner.run(command, function (err) {
             if (err) {
-              gutil.log(err.message, 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
+              log(err.message, 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
             }
             done(cb, toRun.length);
           });
@@ -53,6 +53,13 @@ module.exports = exports = function install () {
     }
   }
 };
+
+function log () {
+  if (isTest()) {
+    return;
+  }
+  gutil.log.apply(gutil, [].slice.call(arguments));
+}
 
 function formatCommands (cmds) {
   return cmds.map(formatCommand).join(' && ');
