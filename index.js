@@ -8,7 +8,7 @@ var through2 = require('through2'),
       'package.json': {cmd: 'npm', args: ['install']}
     };
 
-module.exports = exports = function install () {
+module.exports = exports = function install (opts) {
   var toRun = [],
       count = 0;
 
@@ -19,7 +19,10 @@ module.exports = exports = function install () {
         cb();
       }
       var cmd = clone(cmdMap[path.basename(file.path)]);
-      if (cmd) {
+	  
+      if (cmd) {		
+		if(opts && opts.production) cmd.args.push('--production');
+		
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
