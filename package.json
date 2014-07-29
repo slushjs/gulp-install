@@ -1,6 +1,6 @@
 {
   "name": "gulp-install",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Automatically install npm and bower packages if package.json or bower.json is found in the gulp file stream respectively",
   "main": "index.js",
   "scripts": {

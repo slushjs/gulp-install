@@ -49,6 +49,25 @@ gulp.src(['./bower.json', './package.json'])
 
 To not trigger the install use `--skip-install` as CLI parameter when running `slush` or `gulp`.
 
+### options.production
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+
+Set to `true` if `npm install` should be appended with the `--production` parameter when stream contains `package.json`.
+
+**Example:**
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({production: true}));
+```
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
