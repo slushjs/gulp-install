@@ -12,8 +12,6 @@ var chai = require('chai'),
     install = require('../.'),
     args = process.argv.slice();
 	
-	
-
 function fixture (file) {
   var filepath = path.join(__dirname, file);
   return new gutil.File({

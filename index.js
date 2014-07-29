@@ -19,10 +19,12 @@ module.exports = exports = function install (opts) {
         cb();
       }
       var cmd = clone(cmdMap[path.basename(file.path)]);
-	  
-      if (cmd) {		
-	    if(opts && opts.production) cmd.args.push('--production');
-		
+
+      if (cmd) {
+        if(opts && opts.production) {
+          cmd.args.push('--production');
+        }
+
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
