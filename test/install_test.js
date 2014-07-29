@@ -11,7 +11,7 @@ var chai = require('chai'),
     commandRunner = require('../lib/test_commandRunner'),
     install = require('../.'),
     args = process.argv.slice();
-	
+
 function fixture (file) {
   var filepath = path.join(__dirname, file);
   return new gutil.File({
@@ -52,8 +52,8 @@ describe('gulp-install', function () {
 
     stream.end();
   });
-  
-  it('should run `npm install --production` if stream contains `package.json`', function (done) {
+
+  it('should run `npm install --production` if stream contains `package.json` and `production` option is set', function (done) {
     var file = fixture('package.json');
 
     var stream = install({production:true});
@@ -77,7 +77,7 @@ describe('gulp-install', function () {
 
     stream.end();
   });
-  
+
 
   it('should run `bower install --config.interactive=false` if stream contains `bower.json`', function (done) {
     var file = fixture('bower.json');
@@ -104,7 +104,7 @@ describe('gulp-install', function () {
     stream.end();
 
   });
-  
+
    it('should run `bower install --production --config.interactive=false` if stream contains `bower.json`', function (done) {
     var file = fixture('bower.json');
 
@@ -162,7 +162,7 @@ describe('gulp-install', function () {
 
     stream.end();
   });
-  
+
     it('should run both `npm install --production` and `bower install --production --config.interactive=false` if stream contains both `package.json` and `bower.json`', function (done) {
     var files = [
       fixture('package.json'),
