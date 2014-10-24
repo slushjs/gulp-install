@@ -163,7 +163,7 @@ describe('gulp-install', function () {
     stream.end();
   });
 
-    it('should run both `npm install --production` and `bower install --production --config.interactive=false` if stream contains both `package.json` and `bower.json`', function (done) {
+  it('should run both `npm install --production` and `bower install --production --config.interactive=false` if stream contains both `package.json` and `bower.json`', function (done) {
     var files = [
       fixture('package.json'),
       fixture('bower.json')
@@ -195,12 +195,39 @@ describe('gulp-install', function () {
     stream.end();
   });
 
+  it('should run `tsd reinstall --save` if stream contains `tsd.json`', function (done) {
+    var file = fixture('tsd.json');
+
+    var stream = install();
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.commandsThatHasRun.length.should.equal(1);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('tsd');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['reinstall', '--save']);
+      done();
+    });
+
+    stream.write(file);
+
+    stream.end();
+
+  });
+
   it('should not run any installs when `--skip-install` CLI option is provided', function (done) {
     var newArgs = args.slice();
     newArgs.push('--skip-install');
     process.argv = newArgs;
 
     var files = [
+      fixture('tsd.json'),
       fixture('package.json'),
       fixture('bower.json')
     ];
