@@ -21,17 +21,26 @@ module.exports = exports = function install (opts) {
       }
       var cmd = clone(cmdMap[path.basename(file.path)]);
 
-          console.log(cmd, opts);
 
+          
 
       if (cmd) {
+
+
+        var cmdArgs = []; 
+
+
         if(opts && opts.production) {
-          cmd.args.push('--production');
+          //cmd.args.push('--production');
         }
 
         if(opts && opts.ignoreScripts) {
-          cmd.args.push('--ignore-scripts');
+          //cmd.args.push('--ignore-scripts');
         }
+
+        cmd.args.concat(cmdArgs);
+
+        console.log(cmd);
 
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
