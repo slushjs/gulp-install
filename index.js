@@ -27,6 +27,7 @@ module.exports = exports = function install (opts) {
         }
 
         if(opts && opts.ignoreScripts) {
+          console.log(opts);
           cmd.args.push('--ignore-scripts');
         }
 
@@ -34,7 +35,7 @@ module.exports = exports = function install (opts) {
         toRun.push(cmd);
       }
       console.log(toRun, file);
-      
+
       this.push(file);
       cb();
     },
