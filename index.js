@@ -1,56 +1,50 @@
 'use strict';
 var through2 = require('through2'),
-    gutil = require('gulp-util'),
-    path = require('path'),
-    commandRunner = require('./lib/' + (isTest() ? 'test_' : '') + 'commandRunner'),
-    cmdMap = {
-      'tsd.json': {cmd: 'tsd', args: ['reinstall', '--save']},
-      'bower.json': {cmd: 'bower', args: ['install', '--config.interactive=false']},
-      'package.json': {cmd: 'npm', args: ['install']}
-    };
+  gutil = require('gulp-util'),
+  path = require('path'),
+  commandRunner = require('./lib/' + (isTest() ? 'test_' : '') + 'commandRunner'),
+  cmdMap = {
+    'tsd.json': {
+      cmd: 'tsd',
+      args: ['reinstall', '--save']
+    },
+    'bower.json': {
+      cmd: 'bower',
+      args: ['install', '--config.interactive=false']
+    },
+    'package.json': {
+      cmd: 'npm',
+      args: ['install']
+    }
+  };
 
-module.exports = exports = function install (opts) {
+module.exports = exports = function install(opts) {
   var toRun = [],
-      count = 0;
+    count = 0;
 
-  return through2(
-    {objectMode: true},
-    function (file, enc, cb) {
+  return through2({
+      objectMode: true
+    },
+    function(file, enc, cb) {
       if (!file.path) {
         cb();
       }
       var cmd = clone(cmdMap[path.basename(file.path)]);
 
-
-          
-
       if (cmd) {
-
-
-        var cmdArgs = []; 
-
-
-        if(opts && opts.production) {
-          //cmd.args.push('--production');
+        if (opts && opts.production) {
+          cmd.args.push('--production');
         }
-
-        if(opts && opts.ignoreScripts) {
-          //cmd.args.push('--ignore-scripts');
+        if (opts && opts.ignoreScripts) {
+          cmd.args.push('--ignore-scripts');
         }
-
-        cmd.args.concat(cmdArgs);
-
-        console.log(cmd);
-
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
-      console.log(toRun, file);
-
       this.push(file);
       cb();
     },
-    function (cb) {
+    function(cb) {
       if (!toRun.length) {
         return cb();
       }
@@ -58,8 +52,8 @@ module.exports = exports = function install (opts) {
         log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
         return cb();
       } else {
-        toRun.forEach(function (command) {
-          commandRunner.run(command, function (err) {
+        toRun.forEach(function(command) {
+          commandRunner.run(command, function(err) {
             if (err) {
               log(err.message, 'Run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
             }
@@ -70,42 +64,42 @@ module.exports = exports = function install (opts) {
     }
   );
 
-  function done (cb, length) {
+  function done(cb, length) {
     if (++count === length) {
       cb();
     }
   }
 };
 
-function log () {
+function log() {
   if (isTest()) {
     return;
   }
   gutil.log.apply(gutil, [].slice.call(arguments));
 }
 
-function formatCommands (cmds) {
+function formatCommands(cmds) {
   return cmds.map(formatCommand).join(' && ');
 }
 
-function formatCommand (command) {
+function formatCommand(command) {
   return command.cmd + ' ' + command.args.join(' ');
 }
 
-function skipInstall () {
+function skipInstall() {
   return process.argv.slice(2).indexOf('--skip-install') >= 0;
 }
 
-function isTest () {
+function isTest() {
   return process.env.NODE_ENV === 'test';
 }
 
-function clone (obj) {
+function clone(obj) {
   if (Array.isArray(obj)) {
     return obj.map(clone);
   } else if (typeof obj === 'object') {
     var copy = {};
-    Object.keys(obj).forEach(function (key) {
+    Object.keys(obj).forEach(function(key) {
       copy[key] = clone(obj[key]);
     });
     return copy;
