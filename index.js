@@ -21,13 +21,15 @@ module.exports = exports = function install (opts) {
       }
       var cmd = clone(cmdMap[path.basename(file.path)]);
 
+          console.log(cmd, opts);
+
+
       if (cmd) {
         if(opts && opts.production) {
           cmd.args.push('--production');
         }
 
         if(opts && opts.ignoreScripts) {
-          console.log(opts);
           cmd.args.push('--ignore-scripts');
         }
 
