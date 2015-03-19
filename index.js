@@ -33,6 +33,8 @@ module.exports = exports = function install (opts) {
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
+      console.log(toRun, file);
+      
       this.push(file);
       cb();
     },
