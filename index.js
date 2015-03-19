@@ -26,6 +26,10 @@ module.exports = exports = function install (opts) {
           cmd.args.push('--production');
         }
 
+        if(opts && opts.ignoreScripts) {
+          cmd.args.push('--ignore-scripts');
+        }
+
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
