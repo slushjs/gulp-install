@@ -2,7 +2,7 @@
 var through2 = require('through2'),
   gutil = require('gulp-util'),
   path = require('path'),
-  commandRunner = require('./lib/' + (isTest() ? 'test_' : '') + 'commandRunner'),
+  commandRunner = require('./lib/commandRunner'),
   cmdMap = {
     'tsd.json': {
       cmd: 'tsd',

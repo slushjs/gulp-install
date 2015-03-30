@@ -1,14 +1,12 @@
 /* jshint camelcase: false, strict: false */
 /* global describe, beforeEach, it */
 
-process.env.NODE_ENV='test';
-
 var chai = require('chai'),
     should = chai.should(),
     util = require('util'),
     gutil = require('gulp-util'),
     path = require('path'),
-    commandRunner = require('../lib/test_commandRunner'),
+    commandRunner = require('../lib/commandRunner'),
     install = require('../.'),
     args = process.argv.slice();
 
@@ -22,10 +20,17 @@ function fixture (file) {
   });
 }
 
+var originalRun;
+
 describe('gulp-install', function () {
   beforeEach(function () {
-    commandRunner.reset();
+    originalRun = commandRunner.run;
+    commandRunner.run = mockRunner();
     process.argv = args;
+  });
+
+  afterEach(function () {
+    commandRunner.run = originalRun;
   });
 
   it('should run `npm install` if stream contains `package.json`', function (done) {
@@ -42,9 +47,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install']);
       done();
     });
 
@@ -67,9 +72,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--production']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--production']);
       done();
     });
 
@@ -92,9 +97,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--ignore-scripts']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--ignore-scripts']);
       done();
     });
 
@@ -118,9 +123,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--config.interactive=false']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('bower');
+      commandRunner.run.commands[0].args.should.eql(['install', '--config.interactive=false']);
       done();
     });
 
@@ -144,9 +149,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--config.interactive=false', '--production']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('bower');
+      commandRunner.run.commands[0].args.should.eql(['install', '--config.interactive=false', '--production']);
       done();
     });
 
@@ -173,11 +178,11 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(2);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
-      commandRunner.commandsThatHasRun[1].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[1].args.should.eql(['install', '--config.interactive=false']);
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install']);
+      commandRunner.run.commands[1].cmd.should.equal('bower');
+      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false']);
       done();
     });
 
@@ -205,11 +210,11 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(2);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--production']);
-      commandRunner.commandsThatHasRun[1].cmd.should.equal('bower');
-      commandRunner.commandsThatHasRun[1].args.should.eql(['install', '--config.interactive=false', '--production']);
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--production']);
+      commandRunner.run.commands[1].cmd.should.equal('bower');
+      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false', '--production']);
       done();
     });
 
@@ -234,9 +239,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(1);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('tsd');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['reinstall', '--save']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('tsd');
+      commandRunner.run.commands[0].args.should.eql(['reinstall', '--save']);
       done();
     });
 
@@ -268,7 +273,7 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(0);
+      commandRunner.run.called.should.equal(0);
       done();
     });
 
@@ -296,13 +301,13 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.commandsThatHasRun.length.should.equal(2);
-      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[0].args.should.eql(['install']);
-      commandRunner.commandsThatHasRun[0].cwd.should.equal(path.join(__dirname, 'dir1'));
-      commandRunner.commandsThatHasRun[1].cmd.should.equal('npm');
-      commandRunner.commandsThatHasRun[1].args.should.eql(['install']);
-      commandRunner.commandsThatHasRun[1].cwd.should.equal(path.join(__dirname, 'dir2'));
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install']);
+      commandRunner.run.commands[0].cwd.should.equal(path.join(__dirname, 'dir1'));
+      commandRunner.run.commands[1].cmd.should.equal('npm');
+      commandRunner.run.commands[1].args.should.eql(['install']);
+      commandRunner.run.commands[1].cwd.should.equal(path.join(__dirname, 'dir2'));
       done();
     });
 
@@ -313,3 +318,14 @@ describe('gulp-install', function () {
     stream.end();
   });
 });
+
+function mockRunner () {
+  var mock = function mock (cmd, cb) {
+    mock.called += 1;
+    mock.commands.push(cmd);
+    cb();
+  };
+  mock.called = 0;
+  mock.commands = [];
+  return mock;
+}
