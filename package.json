@@ -16,7 +16,7 @@
     "npm",
     "install"
   ],
-  "author": "Joakim Bengtson <joakim@klei.se>",
+  "author": "Joakim Carlstein <joakim@klei.se>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/slushjs/gulp-install/issues"
