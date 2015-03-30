@@ -65,8 +65,27 @@ var install = require("gulp-install");
 
 gulp.src(__dirname + '/templates/**')
   .pipe(gulp.dest('./'))
-  .pipe(install({production: true}));
+  .pipe(install({production: true}));  
 ```
+
+### options.ignoreScripts
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+
+Set to `true` if `npm install` should be appended with the `--ignore-scripts` parameter when stream contains `package.json`. Useful for skipping `postinstall` scripts with `npm`. 
+
+**Example:**
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({ignoreScripts: true}));
+```  
 
 ## License
 

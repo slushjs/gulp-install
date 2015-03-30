@@ -78,6 +78,31 @@ describe('gulp-install', function () {
     stream.end();
   });
 
+  it('should run `npm install --ignore-scripts` if stream contains `package.json` and `ignoreScripts` option is set', function (done) {
+    var file = fixture('package.json');
+
+    var stream = install({ignoreScripts:true});
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.commandsThatHasRun.length.should.equal(1);
+      commandRunner.commandsThatHasRun[0].cmd.should.equal('npm');
+      commandRunner.commandsThatHasRun[0].args.should.eql(['install', '--ignore-scripts']);
+      done();
+    });
+
+    stream.write(file);
+
+    stream.end();
+  });
+
 
   it('should run `bower install --config.interactive=false` if stream contains `bower.json`', function (done) {
     var file = fixture('bower.json');
