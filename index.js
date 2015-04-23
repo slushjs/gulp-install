@@ -38,6 +38,9 @@ module.exports = exports = function install(opts) {
         if (opts && opts.ignoreScripts) {
           cmd.args.push('--ignore-scripts');
         }
+        if (cmd.cmd == 'bower' && opts && opts.allowRoot) {
+          cmd.args.push('--allow-root');
+        }
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }
