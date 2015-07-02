@@ -1,7 +1,7 @@
 {
   "name": "gulp-install",
   "version": "0.4.0",
-  "description": "Automatically install npm and bower packages if package.json or bower.json is found in the gulp file stream respectively",
+  "description": "Automatically install npm, bower, tsd, and pip packages/dependencies if the relative configurations are found in the gulp file stream respectively",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha -R spec"
