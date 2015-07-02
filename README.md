@@ -2,11 +2,12 @@
 
 > Automatically install npm, bower, tsd, and pip packages/dependencies if the relative configurations are found in the gulp file stream respectively
 
-File Found | Command run 
-`package.json` | `npm install`
-`bower.json` | `bower install`
-`tsd.json` | `tsd install`
-`requirements.txt` | `pip install -r requirements.txt`
+| File Found | Command run|  
+| --- | --- |  
+|`package.json` | `npm install`|  
+|`bower.json` | `bower install`|  
+|`tsd.json` | `tsd install`|  
+|`requirements.txt` | `pip install -r requirements.txt`|  
 
 It will run the command in the directory it finds the file, so if you have configs nested in a lower directory than your `slushfile.js`/`gulpfile.js`, this will still work. 
 
