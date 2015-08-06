@@ -251,6 +251,32 @@ describe('gulp-install', function () {
 
   });
 
+  it('should run `pip install -r requirements.txt` if stream contains `requirements.txt`', function (done) {
+    var file = fixture('requirements.txt');
+
+    var stream = install();
+
+    stream.on('error', function (err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('pip');
+      commandRunner.run.commands[0].args.should.eql(['install', '-r', 'requirements.txt']);
+      done();
+    });
+
+    stream.write(file);
+
+    stream.end();
+
+  });
+
   it('should not run any installs when `--skip-install` CLI option is provided', function (done) {
     var newArgs = args.slice();
     newArgs.push('--skip-install');
