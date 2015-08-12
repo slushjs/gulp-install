@@ -225,7 +225,7 @@ describe('gulp-install', function () {
     stream.end();
   });
 
-  it('should run both `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', function (done) {
+  it('should run `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', function (done) {
     var files = [
       fixture('bower.json')
     ];
