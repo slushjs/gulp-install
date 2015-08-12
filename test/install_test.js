@@ -225,9 +225,8 @@ describe('gulp-install', function () {
     stream.end();
   });
 
-  it('should run both `npm install --allow-root` and `bower install --allow-root --config.interactive=false` if stream contains both `package.json` and `bower.json`', function (done) {
+  it('should run both `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', function (done) {
     var files = [
-      fixture('package.json'),
       fixture('bower.json')
     ];
 
@@ -242,11 +241,9 @@ describe('gulp-install', function () {
     });
 
     stream.on('end', function () {
-      commandRunner.run.called.should.equal(2);
-      commandRunner.run.commands[0].cmd.should.equal('npm');
-      commandRunner.run.commands[0].args.should.eql(['install', '--allow-root']);
-      commandRunner.run.commands[1].cmd.should.equal('bower');
-      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false', '--allow-root']);
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('bower');
+      commandRunner.run.commands[0].args.should.eql(['install', '--config.interactive=false', '--allow-root']);
       done();
     });
 
