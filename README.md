@@ -9,7 +9,7 @@
 |`tsd.json` | `tsd install`|  
 |`requirements.txt` | `pip install -r requirements.txt`|  
 
-It will run the command in the directory it finds the file, so if you have configs nested in a lower directory than your `slushfile.js`/`gulpfile.js`, this will still work. 
+It will run the command in the directory it finds the file, so if you have configs nested in a lower directory than your `slushfile.js`/`gulpfile.js`, this will still work.
 
 ## Primary objective
 
@@ -84,7 +84,7 @@ gulp.src(__dirname + '/templates/**')
 **Default:** `false`
 
 
-Set to `true` if `npm install` should be appended with the `--ignore-scripts` parameter when stream contains `package.json`. Useful for skipping `postinstall` scripts with `npm`. 
+Set to `true` if `npm install` should be appended with the `--ignore-scripts` parameter when stream contains `package.json`. Useful for skipping `postinstall` scripts with `npm`.
 
 **Example:**
 
@@ -95,6 +95,25 @@ gulp.src(__dirname + '/templates/**')
   .pipe(gulp.dest('./'))
   .pipe(install({ignoreScripts: true}));
 ```  
+
+### options.allowRoot
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+
+Set to `true` if `bower install` should be appended with the `--allow-root` parameter when stream contains `bower.json`.
+
+**Example:**
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({allowRoot: true}));  
+```
 
 
 ## License

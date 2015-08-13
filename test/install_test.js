@@ -225,6 +225,35 @@ describe('gulp-install', function () {
     stream.end();
   });
 
+  it('should run `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', function (done) {
+    var files = [
+      fixture('bower.json')
+    ];
+
+    var stream = install({allowRoot:true});
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('bower');
+      commandRunner.run.commands[0].args.should.eql(['install', '--config.interactive=false', '--allow-root']);
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
+  });
+
   it('should run `tsd reinstall --save` if stream contains `tsd.json`', function (done) {
     var file = fixture('tsd.json');
 
