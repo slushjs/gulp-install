@@ -24,11 +24,11 @@
   "homepage": "https://github.com/slushjs/gulp-install",
   "dependencies": {
     "gulp-util": "^3.0.4",
-    "through2": "^0.6.3",
+    "through2": "^2.0.0",
     "which": "^1.0.9"
   },
   "devDependencies": {
-    "chai": "^2.1.2",
+    "chai": "^3.2.0",
     "mocha": "^2.2.1"
   }
 }
