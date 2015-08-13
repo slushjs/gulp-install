@@ -42,9 +42,13 @@ module.exports = exports = function install(opts) {
         if (opts && opts.ignoreScripts) {
           cmd.args.push('--ignore-scripts');
         }
-        if (cmd.cmd == 'bower' && opts && opts.allowRoot) {
+        if (cmd.cmd === 'bower' && opts && opts.allowRoot) {
           cmd.args.push('--allow-root');
         }
+        if (cmd.cmd === 'npm' && opts && opts.noOptional) {
+          cmd.args.push('--no-optional');
+        }
+
         cmd.cwd = path.dirname(file.path);
         toRun.push(cmd);
       }

@@ -94,7 +94,25 @@ var install = require("gulp-install");
 gulp.src(__dirname + '/templates/**')
   .pipe(gulp.dest('./'))
   .pipe(install({ignoreScripts: true}));
-```  
+```
+
+### options.noOptional
+
+**Type:** `Boolean`
+
+**Default:** `false`
+
+Set to `true` if `npm install` should be appended with the `--no-optional` parameter which will prevent optional dependencies from being installed.
+
+**Example:**
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({noOptional: true}));
+```
 
 ### options.allowRoot
 

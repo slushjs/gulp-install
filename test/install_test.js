@@ -303,7 +303,35 @@ describe('gulp-install', function () {
     stream.write(file);
 
     stream.end();
+  });
 
+  it('should run `npm install --no-optional` if `noOptional` option is set', function(done) {
+    var files = [
+      fixture('package.json')
+    ];
+
+    var stream = install({noOptional:true});
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--no-optional']);
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
   });
 
   it('should not run any installs when `--skip-install` CLI option is provided', function (done) {
