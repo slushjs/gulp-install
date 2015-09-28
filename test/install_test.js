@@ -334,6 +334,99 @@ describe('gulp-install', function () {
     stream.end();
   });
 
+  it('should run `npm install --dev --no-shrinkwrap` if args option is the appropriate array', function(done) {
+    var files = [
+      fixture('package.json')
+    ];
+
+    var stream = install({
+        args: ['dev', 'no-shrinkwrap']
+      });
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--dev', '--no-shrinkwrap']);
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
+  });
+
+  it('should run `npm install --dev` if args option is \'--dev\'', function(done) {
+    var files = [
+      fixture('package.json')
+    ];
+
+    var stream = install({
+        args: 'dev'
+      });
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--dev']);
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
+  });
+
+  it('should run `npm install` even if args option is in an invalid format', function(done) {
+    var files = [
+      fixture('package.json')
+    ];
+
+    var stream = install({
+        args: 42
+      });
+
+    stream.on('error', function(err) {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', function () {
+    });
+
+    stream.on('end', function () {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install']);
+      done();
+    });
+
+    files.forEach(function (file) {
+      stream.write(file);
+    });
+
+    stream.end();
+  });
+
   it('should not run any installs when `--skip-install` CLI option is provided', function (done) {
     var newArgs = args.slice();
     newArgs.push('--skip-install');
