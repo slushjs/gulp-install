@@ -42,6 +42,11 @@ module.exports = exports = function install(opts) {
         if (opts && opts.ignoreScripts) {
           cmd.args.push('--ignore-scripts');
         }
+        if (opts && opts.args) {
+          formatArguments(opts.args).forEach(function(arg) {
+            cmd.args.push(arg);
+          });
+        }
         if (cmd.cmd === 'bower' && opts && opts.allowRoot) {
           cmd.args.push('--allow-root');
         }
@@ -96,6 +101,28 @@ function formatCommands(cmds) {
 
 function formatCommand(command) {
   return command.cmd + ' ' + command.args.join(' ');
+}
+
+function formatArguments(args) {
+  if (Array.isArray(args)) {
+    args.forEach(function(arg, index, arr) {
+      arr[index] = formatArgument(arg);
+    });
+    return args;
+  } else if (typeof args === 'string' || args instanceof String) {
+    return [ formatArgument(args) ];
+  } else {
+    log('Arguments are not passed in a valid format: ' + args);
+    return [];
+  }
+}
+
+function formatArgument(arg) {
+  var result = arg;
+  while (!result.match(/--.*/)) {
+    result = '-' + result;
+  }
+  return result;
 }
 
 function skipInstall() {

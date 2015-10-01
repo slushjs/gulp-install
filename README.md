@@ -133,6 +133,27 @@ gulp.src(__dirname + '/templates/**')
   .pipe(install({allowRoot: true}));  
 ```
 
+### options.args
+
+**Type:** `Array or String`
+
+**Default:** `undefined`
+
+
+Specify additional arguments that will be passed to the install command(s).
+
+**Example:**
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({
+      args: ['dev', '--no-shrinkwrap' ]} // npm install --dev --no-shrinkwrap
+    ));  
+```
+
 
 ## License
 
