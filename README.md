@@ -1,15 +1,40 @@
 # gulp-install [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
-> Automatically install npm, bower, tsd, and pip packages/dependencies if the relative configurations are found in the gulp file stream respectively
+> Automatically install npm, bower, tsd, typings, composer and pip packages/dependencies if the relative configurations are found in the gulp file stream respectively
+
+<!-- MDTOC maxdepth:6 firsth1:2 numbering:0 flatten:0 bullets:1 updateOnSave:1 -->
+
+- [Primary objective](#primary-objective)   
+- [Installation](#installation)   
+   - [For global use with slush](#for-global-use-with-slush)   
+   - [For local use with gulp](#for-local-use-with-gulp)   
+- [Usage](#usage)   
+   - [In your `slushfile.js`:](#in-your-slushfilejs)   
+   - [In your `gulpfile.js`:](#in-your-gulpfilejs)   
+- [Options](#options)   
+   - [options.<command>](#optionscommand)   
+   - [options.commands](#optionscommands)   
+   - [options.production](#optionsproduction)   
+   - [options.ignoreScripts](#optionsignorescripts)   
+   - [options.noOptional](#optionsnooptional)   
+   - [options.allowRoot](#optionsallowroot)   
+   - [options.args](#optionsargs)   
+- [License](#license)   
+
+<!-- /MDTOC -->
 
 | File Found | Command run|  
 | --- | --- |  
 |`package.json` | `npm install`|  
 |`bower.json` | `bower install`|  
-|`tsd.json` | `tsd install`|  
+|`tsd.json` | `tsd reinstall --save`|  
+|`typings.json` | `typings install`|  
+|`composer.json` | `composer install`|  
 |`requirements.txt` | `pip install -r requirements.txt`|  
 
 It will run the command in the directory it finds the file, so if you have configs nested in a lower directory than your `slushfile.js`/`gulpfile.js`, this will still work.
+
+**NOTE** since `v1.0.0` gulp-install requires at least NodeJS v6.
 
 ## Primary objective
 
@@ -57,6 +82,49 @@ gulp.src(['./bower.json', './package.json'])
 ## Options
 
 To not trigger the install use `--skip-install` as CLI parameter when running `slush` or `gulp`.
+
+### options.<command>
+
+**Type:** `Array|String|Object`
+
+**Default:** `null`
+
+
+Use this option(s) to specify any arguments for any command, e.g:
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({
+    npm: '--production', // Either a single argument as a string
+    bower: {allowRoot: true}, // Or arguments as an object (transformed using Dargs: https://www.npmjs.com/package/dargs)
+    pip: ['--target', '.'] // Or arguments as an array
+  }));
+```
+
+### options.commands
+
+**Type:** `Object`
+
+**Default:** `null`
+
+
+Use this option to add any command to be run for any file, e.g:
+
+```javascript
+var install = require("gulp-install");
+
+gulp.src(__dirname + '/templates/**')
+  .pipe(gulp.dest('./'))
+  .pipe(install({
+    commands: {
+      'package.json': 'yarn'
+    },
+    yarn: ['--extra', '--args', '--here']
+  }));
+```
 
 ### options.production
 
