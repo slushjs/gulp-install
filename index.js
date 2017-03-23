@@ -1,56 +1,53 @@
 'use strict';
-var through2 = require('through2'),
-  gutil = require('gulp-util'),
-  path = require('path'),
-  commandRunner = require('./lib/commandRunner'),
-  cmdMap = {
-    'tsd.json': {
-      cmd: 'tsd',
-      args: ['reinstall', '--save']
-    },
-    'bower.json': {
-      cmd: 'bower',
-      args: ['install', '--config.interactive=false']
-    },
-    'package.json': {
-      cmd: 'npm',
-      args: ['install']
-    },
-    'requirements.txt': {
-      cmd: 'pip',
-      args: ['install', '-r', 'requirements.txt']
-    }
-  };
+const path = require('path');
+const through2 = require('through2');
+const gutil = require('gulp-util');
+const groupBy = require('lodash.groupby');
+const PQueue = require('p-queue');
+const commandRunner = require('./lib/command-runner');
 
-module.exports = exports = function install(opts) {
-  var toRun = [],
-    count = 0;
+const commands = {
+  tsd: ['reinstall', '--save'],
+  bower: ['install', '--config.interactive=false'],
+  npm: ['install'],
+  pip: ['install', '-r', 'requirements.txt'],
+};
 
-  return through2({
-      objectMode: true
-    },
-    function(file, enc, cb) {
+const fileToCommand = {
+  'tsd.json': 'tsd',
+  'bower.json': 'bower',
+  'package.json': 'npm',
+  'requirements.txt': 'pip',
+};
+
+module.exports = function (opts = {}) {
+  const toRun = [];
+
+  return through2(
+    {objectMode: true},
+    function (file, enc, cb) {
       if (!file.path) {
-        cb();
+        return cb();
       }
-      var cmd = clone(cmdMap[path.basename(file.path)]);
+      if (fileToCommand[path.basename(file.path)]) {
+        const cmd = {
+          cmd: fileToCommand[path.basename(file.path)],
+          args: (commands[fileToCommand[path.basename(file.path)]] || []).slice()
+        };
 
-      if (cmd) {
-        if (opts && opts.production) {
+        if (['bower', 'npm'].includes(cmd.cmd) && opts.production) {
           cmd.args.push('--production');
         }
-        if (opts && opts.ignoreScripts) {
+        if (cmd.cmd === 'npm' && opts.ignoreScripts) {
           cmd.args.push('--ignore-scripts');
         }
-        if (opts && opts.args) {
-          formatArguments(opts.args).forEach(function(arg) {
-            cmd.args.push(arg);
-          });
+        if (opts.args) {
+          cmd.args = cmd.args.concat(opts.args).map(arg => arg.toString());
         }
-        if (cmd.cmd === 'bower' && opts && opts.allowRoot) {
+        if (cmd.cmd === 'bower' && opts.allowRoot) {
           cmd.args.push('--allow-root');
         }
-        if (cmd.cmd === 'npm' && opts && opts.noOptional) {
+        if (cmd.cmd === 'npm' && opts.noOptional) {
           cmd.args.push('--no-optional');
         }
 
@@ -60,39 +57,39 @@ module.exports = exports = function install(opts) {
       this.push(file);
       cb();
     },
-    function(cb) {
-      if (!toRun.length) {
+    cb => {
+      if (toRun.length === 0) {
         return cb();
       }
       if (skipInstall()) {
         log('Skipping install.', 'Run `' + gutil.colors.yellow(formatCommands(toRun)) + '` manually');
         return cb();
-      } else {
-        toRun.forEach(function(command) {
-          commandRunner.run(command, function(err) {
-            if (err) {
-              log(err.message, ', run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
-              return cb(err);
-            }
-            done(cb, toRun.length);
-          });
-        });
       }
+      const groupedCommands = groupBy(toRun, 'cmd');
+      Promise.all(Object.keys(groupedCommands).map(cmd => {
+        const commands = groupedCommands[cmd];
+        const queue = new PQueue({concurrency: 1});
+        return Promise.all(commands.map(command => queue.add(() => logFailure(command)(commandRunner.run(command)))));
+      }))
+      .then(() => cb(), cb); // eslint-disable-line promise/no-callback-in-promise
     }
   );
-
-  function done(cb, length) {
-    if (++count === length) {
-      cb();
-    }
-  }
 };
 
-function log() {
+function logFailure(command) {
+  return promise => {
+    return promise.catch(err => {
+      log(err.message, ', run `' + gutil.colors.yellow(formatCommand(command)) + '` manually');
+      throw err;
+    });
+  };
+}
+
+function log(...args) {
   if (isTest()) {
     return;
   }
-  gutil.log.apply(gutil, [].slice.call(arguments));
+  gutil.log(...args);
 }
 
 function formatCommands(cmds) {
@@ -103,46 +100,10 @@ function formatCommand(command) {
   return command.cmd + ' ' + command.args.join(' ');
 }
 
-function formatArguments(args) {
-  if (Array.isArray(args)) {
-    args.forEach(function(arg, index, arr) {
-      arr[index] = formatArgument(arg);
-    });
-    return args;
-  } else if (typeof args === 'string' || args instanceof String) {
-    return [ formatArgument(args) ];
-  } else {
-    log('Arguments are not passed in a valid format: ' + args);
-    return [];
-  }
-}
-
-function formatArgument(arg) {
-  var result = arg;
-  while (!result.match(/--.*/)) {
-    result = '-' + result;
-  }
-  return result;
-}
-
 function skipInstall() {
-  return process.argv.slice(2).indexOf('--skip-install') >= 0;
+  return process.argv.slice(2).includes('--skip-install');
 }
 
 function isTest() {
   return process.env.NODE_ENV === 'test';
-}
-
-function clone(obj) {
-  if (Array.isArray(obj)) {
-    return obj.map(clone);
-  } else if (typeof obj === 'object') {
-    var copy = {};
-    Object.keys(obj).forEach(function(key) {
-      copy[key] = clone(obj[key]);
-    });
-    return copy;
-  } else {
-    return obj;
-  }
 }
