@@ -1,6 +1,6 @@
 {
   "name": "gulp-install",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Automatically install npm, bower, tsd, and pip packages/dependencies if the relative configurations are found in the gulp file stream respectively",
   "main": "index.js",
   "scripts": {
@@ -33,6 +33,7 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "mocha": "^3.2.0",
+    "standard-version": "^4.0.0",
     "xo": "^0.18.0"
   },
   "xo": {
