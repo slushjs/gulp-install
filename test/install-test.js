@@ -589,6 +589,57 @@ describe('gulp-install', () => {
 
     stream.end();
   });
+
+  it('should call given callback when done', done => {
+    const files = [
+      fixture('package.json')
+    ];
+
+    const stream = install(() => {
+      commandRunner.run.called.should.equal(1);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install']);
+      done();
+    });
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
+
+  it('should allow both options and a callback', done => {
+    const files = [
+      fixture('package.json')
+    ];
+
+    const stream = install(
+      {commands: {'package.json': 'yarn'}},
+      () => {
+        commandRunner.run.called.should.equal(1);
+        commandRunner.run.commands[0].cmd.should.equal('yarn');
+        commandRunner.run.commands[0].args.should.eql([]);
+        done();
+      }
+    );
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
 });
 
 function mockRunner() {

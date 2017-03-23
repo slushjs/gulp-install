@@ -25,7 +25,13 @@ const defaultFileToCommand = {
   'typings.json': 'typings'
 };
 
-module.exports = function (opts = {}) {
+const noop = () => {};
+
+module.exports = function (opts = {}, done = noop) {
+  if (typeof opts === 'function') {
+    done = opts;
+    opts = {};
+  }
   const fileToCommand = Object.assign(
     {},
     defaultFileToCommand,
@@ -88,6 +94,7 @@ module.exports = function (opts = {}) {
         const queue = new PQueue({concurrency: 1});
         return Promise.all(commands.map(command => queue.add(() => logFailure(command)(commandRunner.run(command)))));
       }))
+      .then(() => done())
       .then(() => cb(), cb); // eslint-disable-line promise/no-callback-in-promise
     }
   );

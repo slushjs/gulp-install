@@ -11,8 +11,10 @@
 - [Usage](#usage)   
    - [In your `slushfile.js`:](#in-your-slushfilejs)   
    - [In your `gulpfile.js`:](#in-your-gulpfilejs)   
+- [API](#api)   
+   - [`inject([options] [, callback])`](#injectoptions-callback)   
 - [Options](#options)   
-   - [options.<command>](#optionscommand)   
+   - [options.`<command>`](#optionscommand)   
    - [options.commands](#optionscommands)   
    - [options.production](#optionsproduction)   
    - [options.ignoreScripts](#optionsignorescripts)   
@@ -79,11 +81,20 @@ gulp.src(['./bower.json', './package.json'])
   .pipe(install());
 ```
 
+## API
+
+### `inject([options] [, callback])`
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | `Object` | Any [option](#options) |
+| callback | `Function` | Called when install is finished (not on failures) |
+
 ## Options
 
 To not trigger the install use `--skip-install` as CLI parameter when running `slush` or `gulp`.
 
-### options.<command>
+### options.`<command>`
 
 **Type:** `Array|String|Object`
 
