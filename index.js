@@ -11,6 +11,7 @@ const commands = {
   bower: ['install', '--config.interactive=false'],
   npm: ['install'],
   pip: ['install', '-r', 'requirements.txt'],
+  composer: ['install'],
 };
 
 const fileToCommand = {
@@ -18,6 +19,7 @@ const fileToCommand = {
   'bower.json': 'bower',
   'package.json': 'npm',
   'requirements.txt': 'pip',
+  'composer.json': 'composer',
 };
 
 module.exports = function (opts = {}) {
