@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/slushjs/gulp-install/compare/v1.0.1...v1.1.0) (2017-03-23)
+
+
+### Features
+
+* add callback support (closes [#17](https://github.com/slushjs/gulp-install/issues/17) [#31](https://github.com/slushjs/gulp-install/issues/31)) ([2e58f84](https://github.com/slushjs/gulp-install/commit/2e58f84))
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/slushjs/gulp-install/compare/v1.0.0...v1.0.1) (2017-03-23)
 
