@@ -307,6 +307,46 @@ describe('gulp-install', () => {
     stream.end();
   });
 
+  it('should be able to any command for any file', done => {
+    const files = [
+      fixture('package.json'),
+      fixture('config.js'),
+      fixture('blaha.yml')
+    ];
+
+    const stream = install({
+      jspm: 'install',
+      blaha: ['one', 'two', '--three'],
+      commands: {
+        'package.json': 'yarn',
+        'config.js': 'jspm',
+        'blaha.yml': 'blaha'
+      }
+    });
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    stream.on('end', () => {
+      commandRunner.run.called.should.equal(3);
+      commandRunner.run.commands[0].cmd.should.equal('yarn');
+      commandRunner.run.commands[0].args.should.eql([]);
+      commandRunner.run.commands[1].cmd.should.equal('jspm');
+      commandRunner.run.commands[1].args.should.eql(['install']);
+      commandRunner.run.commands[2].cmd.should.equal('blaha');
+      commandRunner.run.commands[2].args.should.eql(['one', 'two', '--three']);
+      done();
+    });
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
+
   it('should run `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', done => {
     const files = [
       fixture('bower.json')

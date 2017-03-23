@@ -16,7 +16,7 @@ const commands = {
   typings: ['install']
 };
 
-const fileToCommand = {
+const defaultFileToCommand = {
   'tsd.json': 'tsd',
   'bower.json': 'bower',
   'package.json': 'npm',
@@ -26,6 +26,11 @@ const fileToCommand = {
 };
 
 module.exports = function (opts = {}) {
+  const fileToCommand = Object.assign(
+    {},
+    defaultFileToCommand,
+    opts.commands
+  );
   const toRun = [];
 
   return through2(
