@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const through2 = require('through2');
+const dargs = require('dargs');
 const gutil = require('gulp-util');
 const groupBy = require('lodash.groupby');
 const PQueue = require('p-queue');
@@ -47,6 +48,13 @@ module.exports = function (opts = {}) {
         }
         if (opts.args) {
           cmd.args = cmd.args.concat(opts.args).map(arg => arg.toString());
+        }
+        if (Array.isArray(opts[cmd.cmd])) {
+          cmd.args = cmd.args.concat(opts[cmd.cmd].map(arg => arg.toString()));
+        } else if (typeof opts[cmd.cmd] === 'object') {
+          cmd.args = cmd.args.concat(dargs(opts[cmd.cmd]));
+        } else if (opts[cmd.cmd]) {
+          cmd.args = cmd.args.concat(opts[cmd.cmd].toString());
         }
         if (cmd.cmd === 'bower' && opts.allowRoot) {
           cmd.args.push('--allow-root');

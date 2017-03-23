@@ -211,6 +211,102 @@ describe('gulp-install', () => {
     stream.end();
   });
 
+  it('should be able to specify different args for different commands', done => {
+    const files = [
+      fixture('package.json'),
+      fixture('bower.json')
+    ];
+
+    const stream = install({
+      bower: ['--allow-root'],
+      npm: ['--silent']
+    });
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    stream.on('end', () => {
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--silent']);
+      commandRunner.run.commands[1].cmd.should.equal('bower');
+      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false', '--allow-root']);
+      done();
+    });
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
+
+  it('should be able to specify different args using objects for different commands', done => {
+    const files = [
+      fixture('package.json'),
+      fixture('bower.json')
+    ];
+
+    const stream = install({
+      bower: {allowRoot: true, silent: true},
+      npm: {registry: 'https://my.own-registry.com'}
+    });
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    stream.on('end', () => {
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--registry=https://my.own-registry.com']);
+      commandRunner.run.commands[1].cmd.should.equal('bower');
+      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false', '--allow-root', '--silent']);
+      done();
+    });
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
+
+  it('should be able to specify a different single argument using a string for different commands', done => {
+    const files = [
+      fixture('package.json'),
+      fixture('bower.json')
+    ];
+
+    const stream = install({
+      bower: '--silent',
+      npm: '--registry=https://my.own-registry.com'
+    });
+
+    stream.on('error', err => {
+      should.exist(err);
+      done(err);
+    });
+
+    stream.on('data', () => {});
+
+    stream.on('end', () => {
+      commandRunner.run.called.should.equal(2);
+      commandRunner.run.commands[0].cmd.should.equal('npm');
+      commandRunner.run.commands[0].args.should.eql(['install', '--registry=https://my.own-registry.com']);
+      commandRunner.run.commands[1].cmd.should.equal('bower');
+      commandRunner.run.commands[1].args.should.eql(['install', '--config.interactive=false', '--silent']);
+      done();
+    });
+
+    files.forEach(file => stream.write(file));
+
+    stream.end();
+  });
+
   it('should run `bower install --allow-root --config.interactive=false` if stream contains `bower.json`', done => {
     const files = [
       fixture('bower.json')
