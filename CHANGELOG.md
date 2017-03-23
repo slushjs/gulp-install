@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/slushjs/gulp-install/compare/v1.0.0...v1.0.1) (2017-03-23)
+
+
+### Bug Fixes
+
+* allow spaces in commands (fixes [#39](https://github.com/slushjs/gulp-install/issues/39)) ([1b7c6d5](https://github.com/slushjs/gulp-install/commit/1b7c6d5))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/slushjs/gulp-install/compare/v0.6.0...v1.0.0) (2017-03-23)
 
