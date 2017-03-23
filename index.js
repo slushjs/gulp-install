@@ -12,6 +12,7 @@ const commands = {
   npm: ['install'],
   pip: ['install', '-r', 'requirements.txt'],
   composer: ['install'],
+  typings: ['install']
 };
 
 const fileToCommand = {
@@ -20,6 +21,7 @@ const fileToCommand = {
   'package.json': 'npm',
   'requirements.txt': 'pip',
   'composer.json': 'composer',
+  'typings.json': 'typings'
 };
 
 module.exports = function (opts = {}) {
