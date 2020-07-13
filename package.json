@@ -33,7 +33,7 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "mocha": "^3.2.0",
-    "standard-version": "^4.0.0",
+    "standard-version": "^8.0.1",
     "xo": "^0.18.0"
   },
   "xo": {
